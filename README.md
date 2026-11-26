@@ -198,8 +198,8 @@ SKYLOCK yet.
   10 s cable pull the app ran on without frames. In a live test the stream also stopped
   twice mid-run with no error; the cause is unknown. Run with `GST_DEBUG=2` to see
   GStreamer's reason.
-- While frames are logged, the loop stalls for 100 to 675 ms at the log's section seals:
-  sealing a section flushes the whole slab, and waits for the disk, on the loop thread
+- While frames are logged, the loop stalls for 100 to 675 ms at the log's section seals
+  ([#1718](https://github.com/copper-project/copper-rs/issues/1718)): sealing a section flushes the whole slab, and waits for the disk, on the loop thread
   (seen on Windows). Copper's `async-cl-io` feature moves the flush to a writer thread,
   and then the loop runs free, but CopperLists are dropped from the log unless
   `logging.copperlist_count` is large enough to outlast the longest flush: 128 in our

@@ -38,7 +38,7 @@ of them.
 | A `CuArrayVec` payload needs a hint to derive `Decode`, and has no `len` | [#1688](https://github.com/copper-project/copper-rs/issues/1688) | Open |
 | `cu-human-pose`: the silent CPU fallback, each frame logged twice, the viewer's memory | [#1689](https://github.com/copper-project/copper-rs/issues/1689) | Open |
 | The skill-drift entries | [copper-rs-skills #19](https://github.com/copper-project/copper-rs-skills/issues/19) | Open |
-| The loop stalls at the log's section seals, and what `async-cl-io` does about it | not reported yet | |
+| The loop stalls at the log's section seals, and what `async-cl-io` does about it | [#1718](https://github.com/copper-project/copper-rs/issues/1718) | Open |
 | Copper's clock drifts about 65 ppm against GStreamer's | not reported | |
 
 
