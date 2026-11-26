@@ -1,0 +1,11 @@
+/target/
+# Run logs: Copper slabs, exports and readouts. The folder is kept by its .keep file.
+/examples/skylock_tracker/logs/*
+!/examples/skylock_tracker/logs/.keep
+*.copper
+*.mcap
+# Model weights are downloaded at run time and never belong here.
+*.pt
+*.onnx
+*.engine
+*.safetensors

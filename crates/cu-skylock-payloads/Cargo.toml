@@ -1,0 +1,25 @@
+[package]
+name = "cu-skylock-payloads"
+description = "Copper payloads for object detections and a single-target track state"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+keywords = ["copper", "robotics", "detection", "tracking", "payload"]
+categories = ["science::robotics", "computer-vision"]
+publish = false
+
+# Read by Copper's component catalog.
+[package.metadata.copper]
+kind = "payload"
+domains = ["payload/perception"]
+environments = ["host"]
+
+[dependencies]
+cu29 = { workspace = true }
+bincode = { workspace = true }
+serde = { workspace = true }

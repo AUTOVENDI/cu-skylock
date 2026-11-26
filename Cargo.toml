@@ -1,0 +1,64 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/cu-skylock-payloads",
+  "crates/cu-skylock-detect",
+  "crates/cu-skylock-tracker",
+  "crates/skylock-timing",
+  "examples/skylock_tracker",
+]
+# The crates build and test without GStreamer. The example app needs it and is built with
+# `-p skylock-tracker`.
+default-members = [
+  "crates/cu-skylock-payloads",
+  "crates/cu-skylock-detect",
+  "crates/cu-skylock-tracker",
+  "crates/skylock-timing",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "Apache-2.0"
+authors = ["WhiteHat Design Studio"]
+repository = "https://github.com/AUTOVENDI/cu-skylock"
+homepage = "https://www.whitehatdesignstudio.com"
+
+[workspace.dependencies]
+# Copper, pinned to one commit of its master. Every Copper crate here uses this exact
+# `git` + `rev` spelling, and a crate that depends on ours must use it too: Cargo treats two
+# spellings as two sources, which makes two `CuMsg` types that don't fit one CopperList.
+cu29 = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu29-build = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu29-export = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu-gstreamer = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu-sensor-payloads = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu-logmon = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+cu-consolemon = { git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387" }
+# Copper's own bincode (core/cu_bincode), named `bincode` because its derives emit
+# `::bincode::` paths. It must come from the same commit as cu29.
+bincode = { package = "cu-bincode", git = "https://github.com/copper-project/copper-rs", rev = "cdfb08ec1e2f195ff7eb0be1855e879a83d76387", default-features = false, features = [
+  "derive",
+  "alloc",
+] }
+
+# The versions Copper's root manifest and its `cu_human_pose` example use at that commit.
+serde = { version = "1.0", default-features = false, features = [
+  "derive",
+  "alloc",
+] }
+rerun = { version = "~0.43.2", default-features = false, features = [
+  "sdk",
+  "server",
+  "log",
+] }
+candle-core = "0.11.0"
+candle-nn = "0.11.0"
+hf-hub = { version = "1.0.0", features = ["blocking"] }
+
+# This repository's crates.
+cu-skylock-payloads = { path = "crates/cu-skylock-payloads" }
+cu-skylock-detect = { path = "crates/cu-skylock-detect" }
+cu-skylock-tracker = { path = "crates/cu-skylock-tracker" }
+skylock-timing = { path = "crates/skylock-timing" }

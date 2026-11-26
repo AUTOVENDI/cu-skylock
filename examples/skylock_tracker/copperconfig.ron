@@ -1,0 +1,62 @@
+(
+    runtime: (rate_target_hz: 120),
+    tasks: [
+        (
+            id: "camera",
+            type: "tasks::RtspCamera",
+            config: {
+                "pipeline": "rtspsrc location=RTSP_URL_PLACEHOLDER latency=0 protocols=tcp ! rtph265depay ! h265parse ! avdec_h265 ! videoconvert ! videoscale ! video/x-raw,format=NV12,width=640,height=360 ! appsink name=copper max-buffers=1 drop=true sync=false",
+                "caps": "video/x-raw, format=NV12, width=640, height=360",
+                "frame_mode": "fifo",
+            },
+        ),
+        (
+            id: "gst_to_image",
+            type: "tasks::GstToCuImage",
+            config: {
+                "width": 640,
+                "height": 360,
+                "fourcc": "NV12",
+                "stats_period_s": 10,
+                "stats_skip_s": 10,
+                "stall_ms": 100,
+            },
+        ),
+        (
+            id: "detector",
+            type: "cu_skylock_detect::YoloDetect",
+            config: {
+                "width": 640,
+                "height": 360,
+                "variant": "yolov8n",
+                "conf_threshold": 0.25,
+                "iou_threshold": 0.7,
+                "classes": [0],
+            },
+        ),
+        (
+            id: "tracker",
+            type: "cu_skylock_tracker::KalmanTracker",
+            config: {
+                "confirm_hits": 3,
+                "gate_chi2": 9.21,
+                "max_coast_ms": 1000,
+                "lead_ms": 0,
+                "meas_std_px": 5.0,
+                "accel_psd": 20000.0,
+                "init_vel_std": 300.0,
+            },
+        ),
+        (id: "viz", type: "tasks::RerunTrackViz", config: {"memory_limit": "2GB"}),
+    ],
+    cnx: [
+        (src: "camera", dst: "gst_to_image", msg: "cu_gstreamer::CuGstBuffer"),
+        (src: "gst_to_image", dst: "detector", msg: "cu_sensor_payloads::CuImage<Vec<u8>>"),
+        (src: "gst_to_image", dst: "viz", msg: "cu_sensor_payloads::CuImage<Vec<u8>>"),
+        (src: "detector", dst: "tracker", msg: "cu_skylock_payloads::Detections"),
+        (src: "detector", dst: "viz", msg: "cu_skylock_payloads::Detections"),
+        (src: "tracker", dst: "viz", msg: "cu_skylock_payloads::TrackState"),
+    ],
+    logging: (keyframe_interval: 10000, section_size_mib: 32),
+    monitors: [(type: "cu_logmon::CuLogMon"), (type: "cu_consolemon::CuConsoleMon")],
+)

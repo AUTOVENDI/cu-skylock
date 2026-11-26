@@ -1,0 +1,40 @@
+[package]
+name = "skylock-tracker"
+description = "Example app: an RTSP camera, the YOLOv8 detector, the Kalman tracker and a Rerun view on Copper"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+publish = false
+default-run = "skylock-tracker"
+
+[[bin]]
+name = "skylock-tracker"
+path = "src/main.rs"
+
+[[bin]]
+name = "skylock-tracker-logreader"
+path = "src/logreader.rs"
+
+[features]
+# Inference on an NVIDIA GPU, passed on to the detector.
+cuda = ["cu-skylock-detect/cuda"]
+
+[dependencies]
+cu29 = { workspace = true, features = ["log-level-debug", "textlogs"] }
+cu29-export = { workspace = true }
+cu-gstreamer = { workspace = true, features = ["gst"] }
+cu-sensor-payloads = { workspace = true }
+cu-logmon = { workspace = true }
+cu-consolemon = { workspace = true }
+cu-skylock-payloads = { workspace = true }
+cu-skylock-detect = { workspace = true }
+cu-skylock-tracker = { workspace = true }
+rerun = { workspace = true }
+
+# cu29's logging macros intern their strings at build time.
+[build-dependencies]
+cu29-build = { workspace = true }

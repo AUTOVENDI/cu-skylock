@@ -1,0 +1,37 @@
+[package]
+name = "cu-skylock-detect"
+description = "Copper task that detects objects in NV12 images with YOLOv8 on Candle"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+keywords = ["copper", "robotics", "yolo", "detection", "candle"]
+categories = ["science::robotics", "computer-vision"]
+publish = false
+
+# Read by Copper's component catalog.
+[package.metadata.copper]
+kind = "task"
+domains = ["algorithm/perception", "vision/detection"]
+environments = ["host"]
+
+[features]
+# Inference on an NVIDIA GPU. Without it the task runs on the CPU.
+cuda = ["candle-core/cuda", "candle-nn/cuda"]
+
+[dependencies]
+cu29 = { workspace = true }
+cu-sensor-payloads = { workspace = true }
+cu-skylock-payloads = { workspace = true }
+skylock-timing = { workspace = true }
+candle-core = { workspace = true }
+candle-nn = { workspace = true }
+hf-hub = { workspace = true }
+
+# cu29's logging macros intern their strings at build time.
+[build-dependencies]
+cu29-build = { workspace = true }
